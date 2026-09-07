@@ -91,7 +91,20 @@ jobs:
             sudo systemctl is-active --quiet biodatahub
 
             echo "Checking API health..."
-            curl --fail --silent --show-error http://127.0.0.1:8001/health
 
-            echo ""
-            echo "Deployment completed successfully."
+            for i in {1..10}; do
+              if curl --fail --silent --show-error http://127.0.0.1:8001/health; then
+                echo ""
+                echo "API is healthy."
+                echo "Deployment completed successfully."
+                exit 0
+              fi
+
+              echo "API not ready yet; retrying in 2 seconds..."
+              sleep 2
+            done
+
+            echo "API failed health check."
+            sudo systemctl status biodatahub --no-pager
+            sudo journalctl -u biodatahub -n 50 --no-pager
+            exit 1
