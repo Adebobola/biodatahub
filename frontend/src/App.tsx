@@ -36,7 +36,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/search?q=${encodeURIComponent(query)}&type=gene`
+        `/api/search?q=${encodeURIComponent(query)}&type=gene`
       )
 
       if (!response.ok) {
