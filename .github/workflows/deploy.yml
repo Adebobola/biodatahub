@@ -64,7 +64,6 @@ jobs:
           username: ${{ secrets.STAGING_USER }}
           key: ${{ secrets.STAGING_SSH_KEY }}
           port: 22
-          script_stop: true
           script: |
             set -e
 
@@ -91,4 +90,8 @@ jobs:
             echo "Checking BioDataHub service..."
             sudo systemctl is-active --quiet biodatahub
 
+            echo "Checking API health..."
+            curl --fail --silent --show-error http://127.0.0.1:8001/health
+
+            echo ""
             echo "Deployment completed successfully."
